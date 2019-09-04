@@ -1,0 +1,184 @@
+Lab 1 - Angular overview
+What and why we have to use Angular You can find answer here
+
+Prerequisite to learn angular
+Install Node and npm latest version 
+Install Angular CLI 8 or later 
+Install Visual Studio Code 
+
+Lab 2 - npm example
+
+$ npm init
+$ npm install jquery --save
+$ npm install angular --save
+package.json and versioning
+What is Major version, minor version and revision version 
+What is difference between ^, ~ and * 
+What is difference between dependency and devDependency
+
+Lab 3 - Setting up and running first angular application
+Angular CLI
+// Installing Angular CLI
+$ npm install -g @angular/cli 
+
+// To verify vesion 
+$ npm -v
+$ node -v
+$ ng v
+Angular CLI is command line interface which helps to get basic setup of angular project 
+For eg: If we run, npm install --save angular we will able to get angular 1.7.8 as updated in package-lock.json file, so angular-cli helps to get latest version of angular (currently 8) with basic setup of angular project
+
+AngularJS means 1.X version Angular means 2.x or higher
+
+// For dry run
+$ ng new angular-application -d
+
+// To create angular application
+$ ng new angular-application
+
+// to redirect to path
+$ cd angular-application
+
+// to run application in development mode
+$ ng serve --open 
+$ ng s -o
+// Open http://localhost:4200 to view it in the browser.
+
+// to build application 
+$ ng build
+// create dist folder which will go for production
+
+Configuration files
+angular.json -> Angular
+package.json -> Node
+tsconfig.json -> TypeScript
+tslint.json -> Linting
+
+Files in dist folder (after running ng build cmd)
+runtime.js -> This is for webpack runtime
+polyfill.js -> Helps to run new ES version javascript in old browser which does not support them
+vendor.js -> Actual project code (component, modules, model)
+main.js -> Points first module
+style.js -> all css code
+
+Lab 4 - Installing bootstrap for Angular
+In this lab we will see how to integrate old javascript frameworks like bootstrap and jQuery with Angular
+
+install bootstrap, jquery and @types/jquery to your package.json file
+
+$ npm install bootstrap@3 --save
+$ npm install @types/jquery --save
+$ npm install jquery --save
+// or you can all these command in one go
+$ npm install bootstrap@3 @types/jquery jquery --save
+
+Add below jquery to angular.json
+
+"styles": [
+  "node_modules/bootstrap/dist/css/bootstrap.min.css"
+],
+"scripts": [
+  "node_modules/jquery/dist/jquery.min.js",
+  "node_modules/bootstrap/dist/js/bootstrap.min.js"
+]
+Check by adding button with css in app.component.html file
+
+Welcome to {{ title }}! <br/>
+<input type="button" value="Test" class="btn btn-primary">
+Lab 5 - Angular Routing
+Create Customer, Supplier and Home page using below command
+
+$ ng g c Home/Home --skipTests --flat=true -is
+$ ng g c Customer/Customer --skipTests --flat=true -is
+$ ng g c Supplier/Supplier --skipTests --flat=true -is
+--skipTests is to skipt spec files 
+--flat is to not create folder 
+-is is to skip css files 
+
+Add below code snippet in app-routing.module
+
+const routes: Routes = [
+  { path: 'Home', component: HomeComponent },
+  { path: 'Customer', component: CustomerComponent },
+  { path: 'Supplier', component: SupplierComponent },
+  { path: '', component: HomeComponent }
+
+];
+Add below code snippet in app.component.html
+
+<div class="container">
+    <nav class="navbar navbar-default">
+        <ul class="nav navbar-nav">
+            <li routerLinkActive="active"><a routerLink="Home" >Home</a></li>
+            <li routerLinkActive="active"><a routerLink="Customer" >Customer</a></li>
+            <li routerLinkActive="active"><a routerLink="Supplier" >Supplier</a></li>
+        </ul>
+    </nav>
+    <router-outlet></router-outlet>
+</div>
+Lab 6 - Creating simple UI page
+Create Customer Model class in customer folder using below command
+
+$ ng g class Customer/customer-model --skipTests
+Add below code snippet in customer-model.ts
+
+export class CustomerModel {
+    CustomerCode: string;
+    CustomerName: string;
+    CustomerAmount: number;
+}
+Create simple UI page in customer.component.html
+
+<div>
+    Customer code : <input type="text" [(ngModel)]="customerModel.CustomerCode" name="cCode" id="cCode"> <br>
+    Customer name : <input type="text" [(ngModel)]="customerModel.CustomerName" name="cName" id="cName"> <br>
+    Customer amount : <input type="text" [(ngModel)]="customerModel.CustomerAmount" name="cAmount" id="cAmount"> <br>
+    <input type="button" value="Add">
+    <br>
+    {{customerModel.CustomerCode}} <br>
+    {{customerModel.CustomerName}} <br>
+    {{customerModel.CustomerAmount}} <br>
+</div>
+create customer object in customer.component.html
+
+import { CustomerModel } from './customer-model';
+.
+export class CustomerComponent implements OnInit {
+  .
+  .
+  customerModel: CustomerModel = new CustomerModel();
+}
+import FormsModule to app.module.ts file
+
+import { FormsModule } from "@angular/forms";
+.
+.
+@NgModule({
+ .
+ .
+  imports: [
+    BrowserModule,
+    AppRoutingModule, FormsModule
+  ],
+  .
+  .
+})
+export class AppModule { }
+Build and run application
+
+For creating html table
+create customers object in customer.component.ts
+
+import { CustomerModel } from './customer-model';
+.
+export class CustomerComponent implements OnInit {
+  .
+  .
+  customerModel: CustomerModel = new CustomerModel();
+  customerModels: Array<CustomerModel> = new Array<CustomerModel>();
+
+  Add() {
+    this.customerModels.push(this.customerModel);
+    this.customerModel = new CustomerModel();
+  }
+}
